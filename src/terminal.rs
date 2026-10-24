@@ -98,3 +98,23 @@ impl Drop for KittyKeyboard {
         let _ = stdout.flush();
     }
 }
+
+/// フォーカス通知を有効にし、Drop で元に戻す。
+/// 有効中は端末ウィンドウのフォーカスが変わるたびに `CSI I` (入) / `CSI O` (外) が届く
+pub struct FocusReporting;
+
+impl FocusReporting {
+    pub fn enable(stdout: &mut impl Write) -> io::Result<Self> {
+        stdout.write_all(b"\x1b[?1004h")?;
+        stdout.flush()?;
+        Ok(Self)
+    }
+}
+
+impl Drop for FocusReporting {
+    fn drop(&mut self) {
+        let mut stdout = io::stdout();
+        let _ = stdout.write_all(b"\x1b[?1004l");
+        let _ = stdout.flush();
+    }
+}
