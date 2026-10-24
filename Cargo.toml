@@ -1,0 +1,8 @@
+[package]
+name = "keyboard_piano"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+libc = "0.2.191"
+rodio = { version = "0.23.0", default-features = false, features = ["playback"] }
